@@ -1,0 +1,285 @@
+substitutions:
+  hostname: ookcontrol
+  friendly_name: ookcontrol
+
+esphome:
+  name: $hostname
+  friendly_name: $friendly_name
+  includes:
+    - GateHandler.h
+    - GarageHandler.h
+    - RedonyHandler.h
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "R1AN/uWDDIZAmoesmDZ7qAcqO8OwXoq0V3kGJaK7l3Y="
+
+ota:
+  password: "6b1cf7b9a6c61e883e96d74759d435b8"
+  platform: esphome
+
+wifi:
+  networks:
+  - ssid: !secret wifi_virus_ssid
+    password: !secret wifi_virus_pw
+  - ssid: !secret wifi_dombai_ssid
+    password: !secret wifi_dombai_pw
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Ookcontrol Fallback Hotspot"
+    password: "FpVM39hTfZrS"
+
+captive_portal:
+    
+
+# === Output =====================================================================
+output:
+  - platform: gpio
+    pin: 2
+    id: id_OUT
+    inverted: false
+
+
+###################################################################################################
+# === Sensors =====================================================================================
+# --- Text sensors --------------------------------------------------------------------------------
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: $friendly_name IP
+      id: idTextSenWifiIpAddr
+    ssid:
+      id: idTextSenWifiSsid
+      name: $friendly_name SSID
+    mac_address:
+      id: idTextSenWifiMac
+      name: $friendly_name Mac
+
+# --- Sensors --------------------------------------------------------------------------------------
+sensor:
+# WiFi
+  - platform: wifi_signal
+    name: "WiFi Signal Sensor"
+    id: nappalisen_wifi_signal_sensor
+    update_interval: 30s
+
+
+button:
+#=== garázskapu  =================================================    
+  - platform: template
+    name: "GarázsKapu"
+    on_press:
+      lambda: |-
+        fTxGarageDouble();
+         
+#=== kapu  =================================================  
+  - platform: template
+    name: "Kapu Start"
+    on_press:
+      lambda: |-
+         fTxGateOpen();         
+
+  - platform: template
+    name: "Kapu Stop"
+    on_press:
+      lambda: |-
+        fTxGateStop();         
+
+  - platform: template
+    name: "Kapu Személyi"
+    on_press:
+      lambda: |-
+        fTxGatePers();
+         
+#=== lenti redőnyök =================================================
+  - platform: template
+    name: "Lenti összes redőny FEL"
+    icon: "mdi:window-shutter-open"    
+    on_press:
+      lambda: |-
+        fTxLentiRFel();
+        
+  - platform: template
+    name: "Lenti összes redőny LE"
+    icon: "mdi:window-shutter"    
+    on_press:
+      lambda: |-
+        fTxLentiRLe();
+
+  - platform: template
+    name: "Lenti összes redőny STOP"
+    icon: "mdi:window-shutter-alert"    
+    on_press:
+      lambda: |-
+        fTxLentiRSTOP();        
+        
+#=== fenti redőnyök =================================================
+  - platform: template
+    name: "Fenti összes redőny FEL"
+    icon: "mdi:window-shutter-open"
+    on_press:
+      lambda: |-
+         fTxFentiRFel();
+
+  - platform: template
+    name: "Fenti összes redőny LE"
+    icon: "mdi:window-shutter"
+    on_press:
+      lambda: |-
+          fTxFentiRLe();
+
+  - platform: template
+    name: "Fenti összes redőny STOP"
+    icon: "mdi:window-shutter-alert"
+    on_press:
+      lambda: |-
+         fTxFentiRSTOP();
+         
+#=== fenti redőnyök Réka =================================================
+  - platform: template
+    name: "Réka redőny FEL"
+    icon: "mdi:window-shutter-open"    
+    on_press:
+      lambda: |-
+         fTxReka0Fel();                 
+
+  - platform: template
+    name: "Réka redőny LE"
+    icon: "mdi:window-shutter"    
+    on_press:
+      lambda: |-
+         fTxReka0Le();                 
+
+  - platform: template
+    name: "Réka redőny STOP"
+    icon: "mdi:window-shutter-alert"    
+    on_press:
+      lambda: |-
+         fTxReka0STOP();
+         
+#=== fenti redőnyök Áron =================================================
+  - platform: template
+    name: "Áron redőny FEL"
+    icon: "mdi:window-shutter-open"    
+    on_press:
+      lambda: |-
+         fTxAronFel();               
+
+  - platform: template
+    name: "Áron redőny LE"
+    icon: "mdi:window-shutter"    
+    on_press:
+      lambda: |-
+         fTxAronLe();
+
+  - platform: template
+    name: "Áron redőny STOP"
+    icon: "mdi:window-shutter-alert"    
+    on_press:
+      lambda: |-
+         fTxAronSTOP();
+         
+#=== fenti redőnyök Háló =================================================
+  - platform: template
+    name: "Háló redőny FEL"
+    icon: "mdi:window-shutter-open"    
+    on_press:
+      lambda: |-
+         fTxHalo0Fel();                 
+
+  - platform: template
+    name: "Háló redőny LE"
+    icon: "mdi:window-shutter"    
+    on_press:
+      lambda: |-
+         fTxHalo0Le();             
+
+  - platform: template
+    name: "Háló redőny STOP"
+    icon: "mdi:window-shutter-alert"    
+    on_press:
+      lambda: |-
+         fTxHalo0STOP();    
+
+#=== lenti redőnyök Konyha =================================================
+  - platform: template
+    name: "Konyha redőny FEL"
+    icon: "mdi:window-shutter-open"    
+    on_press:
+      lambda: |-
+         fTxRKoFel();              
+
+  - platform: template
+    name: "Konyha redőny LE"
+    icon: "mdi:window-shutter"    
+    on_press:
+      lambda: |-
+         fTxRKoLe();          
+
+  - platform: template
+    name: "Konyha redőny STOP"
+    icon: "mdi:window-shutter-alert"    
+    on_press:
+      lambda: |-
+         fTxRKoSTOP();
+         
+#=== lenti redőnyök N1 =================================================
+  - platform: template
+    name: "Nappali 1 redőny FEL"
+    icon: "mdi:window-shutter-open"    
+    on_press:
+      lambda: |-
+         fTxRN1Fel();                 
+
+  - platform: template
+    name: "Nappali 1 redőny LE"
+    icon: "mdi:window-shutter"    
+    on_press:
+      lambda: |-
+         fTxRN1Le();              
+
+  - platform: template
+    name: "Nappali 1 redőny STOP"
+    icon: "mdi:window-shutter-alert"    
+    on_press:
+      lambda: |-
+         fTxRN1STOP();
+         
+#=== lenti redőnyök N2 =================================================
+  - platform: template
+    name: "Nappali 2 redőny FEL"
+    icon: "mdi:window-shutter-open"    
+    on_press:
+      lambda: |-
+         fTxRN2Fel();               
+
+  - platform: template
+    name: "Nappali 2 redőny LE"
+    icon: "mdi:window-shutter"    
+    on_press:
+      lambda: |-
+         fTxRN2Le();                 
+
+  - platform: template
+    name: "Nappali 2 redőny STOP"
+    icon: "mdi:window-shutter-alert"    
+    on_press:
+      lambda: |-
+         fTxRN2STOP();
+
+
+
+
+
+
+
