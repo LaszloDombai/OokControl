@@ -1,3 +1,3 @@
 # 04_OokControl
-Feel free to use additional custom code in Home Assistant project.
+A simple example how to use additional custom code in Home Assistant project.
  
